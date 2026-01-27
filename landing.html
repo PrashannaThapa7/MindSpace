@@ -1,0 +1,166 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MindSpace | Mental Wellness</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#support">Support</a></li>
+  </ul>
+  <div>
+    <a href="{% url 'login' %}" class="btn-outline">Login</a>
+    <a href="{% url 'signup' %}" class="btn-fill">Sign Up</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="hero-text">
+    <span class="badge">🕊️ Mental Wellness Platform</span>
+    <h1>Your mind deserves<br/>care and kindness</h1>
+    <p>MindSpace helps you track your mood, talk to an AI companion, journal your thoughts, and access mental health resources — all in one private space.</p>
+    <div id="hero-btns">
+      <a href="{% url 'signup' %}" class="btn-fill">Get Started Free</a>
+      <a href="#how" class="btn-outline">See how it works</a>
+    </div>
+  </div>
+  <div id="hero-visual">
+    <div id="hero-card">
+      <div class="hc-row"><span>😊</span><span>😐</span><span>😔</span><span>😤</span><span>😴</span></div>
+      <p>How are you feeling today?</p>
+      <div id="chat-preview">
+        <div class="cp-bot">Hi! I'm here to listen 💙</div>
+        <div class="cp-user">I've been feeling anxious lately</div>
+        <div class="cp-bot">That's okay, let's talk about it...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <h2>Everything you need for mental wellness</h2>
+  <p class="sub">Simple tools that actually help</p>
+  <div class="grid">
+    <div class="card">
+      <i class="fa fa-face-smile"></i>
+      <h3>Mood Tracking</h3>
+      <p>Log how you feel daily and see patterns over time with visual graphs.</p>
+    </div>
+    <div class="card">
+      <i class="fa fa-robot"></i>
+      <h3>AI Companion</h3>
+      <p>Talk to an empathetic AI that listens without judgment, anytime you need.</p>
+    </div>
+    <div class="card">
+      <i class="fa fa-pen-to-square"></i>
+      <h3>Private Journal</h3>
+      <p>Write your thoughts freely. Your journal is encrypted and only yours.</p>
+    </div>
+    <div class="card">
+      <i class="fa fa-book-open"></i>
+      <h3>Resources</h3>
+      <p>Curated articles, breathing exercises, and meditation guides.</p>
+    </div>
+    <div class="card">
+      <i class="fa fa-chart-line"></i>
+      <h3>Progress Insights</h3>
+      <p>Understand your emotional patterns with weekly mood reports.</p>
+    </div>
+    <div class="card">
+      <i class="fa fa-shield-halved"></i>
+      <h3>100% Private</h3>
+      <p>Your data is encrypted and never shared with anyone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <h2>How it works</h2>
+  <p class="sub">Three simple steps to better mental health</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Create your account</h3>
+      <p>Sign up in seconds. Answer a few questions so we can personalise your experience.</p>
+    </div>
+    <div class="step-arrow"><i class="fa fa-arrow-right"></i></div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Track & talk</h3>
+      <p>Log your mood daily, chat with the AI, and write in your journal whenever you need.</p>
+    </div>
+    <div class="step-arrow"><i class="fa fa-arrow-right"></i></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>Grow & reflect</h3>
+      <p>Review your progress, read resources, and build healthier mental habits over time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT CTA -->
+<section id="support">
+  <h2>You are not alone 💙</h2>
+  <p>Thousands of people use MindSpace to take care of their mental health every day. Start your journey today — it's free.</p>
+  <a href="{% url 'signup' %}" class="btn-fill">Start for free</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey. Private, empathetic, and always available.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">AI Chat</a></li>
+        <li><a href="#">Journal</a></li>
+        <li><a href="#">Resources</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Crisis Helpline: 1166 (Available 24/7, Toll-free across Nepal)</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+</body>
+</html>
