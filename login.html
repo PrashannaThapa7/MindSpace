@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login — MindSpace</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}"/>
+</head>
+<body>
+
+<main class="card">
+  <header>
+    <div class="logo">M</div>
+    <h2>Welcome Back</h2>
+    <p>Login to your MindSpace account</p>
+  </header>
+
+  <form method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    
+    <div class="field">
+      <label>Email</label>
+      <input type="email" name="email" placeholder="email@example.com" required/>
+    </div>
+
+    <div class="field">
+      <div class="label-row">
+        <label>Password</label>
+        <a href="{% url 'password_reset' %}">Forgot Password?</a>
+      </div>
+      <input type="password" name="password" placeholder="••••••••" required/>
+    </div>
+
+    {% if error %}<p class="err">{{ error }}</p>{% endif %}
+
+    <button type="submit">Login</button>
+  </form>
+
+  <footer>
+    <p>New here? <a href="{% url 'signup' %}">Sign Up</a></p>
+    <a href="/" class="back">← Back to Home</a>
+  </footer>
+</main>
+
+</body>
+</html>
