@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up — MindSpace</title>
+  <link rel="stylesheet" href="{% static 'css/signup.css' %}"/>
+</head>
+<body>
+
+<div id="page">
+  <aside id="sidebar">
+    <div class="brand">🧠 MindSpace</div>
+    <h1>Start your wellness journey today</h1>
+    <p>A private space to track your mood, journal, and chat with AI.</p>
+    <div class="badges">
+      <span>😊 Daily mood tracking</span>
+      <span>🤖 AI companion chat</span>
+      <span>🔒 100% encrypted</span>
+    </div>
+  </aside>
+
+  <main id="content">
+    <div class="card">
+      <h2>Create account</h2>
+      <p>Join thousands prioritizing their mental health.</p>
+
+      <form method="POST" action="{% url 'signup' %}">
+        {% csrf_token %}
+        
+        <div class="grid">
+          <div class="field">
+            <label>First Name</label>
+            <input type="text" name="first_name" placeholder="Ram" required/>
+          </div>
+          <div class="field">
+            <label>Last Name</label>
+            <input type="text" name="last_name" placeholder="Thapa" required/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" required/>
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" name="email" placeholder="jane@example.com" required/>
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password1" required/>
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" name="password2" required/>
+        </div>
+
+        {% if error %}<p class="err">{{ error }}</p>{% endif %}
+        
+        <button type="submit">Get Started</button>
+      </form>
+
+      <footer>
+        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        <a href="/" class="back">← Back to Home</a>
+      </footer>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
