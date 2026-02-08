@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Getting to know you</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/questions.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div id="wrap">
+
+  <div id="top">
+    <p id="intro">Please answer the following question to help us personalise your experience 🙏</p>
+    <span id="counter">{{ step|add:1 }} / {{ total }}</span>
+  </div>
+
+  <div id="prog"><div id="fill"></div></div>
+  <script>document.getElementById('fill').style.width = '{% widthratio step|add:1 total 100 %}%';</script>
+
+  <div id="card">
+    <p id="sub">Question {{ step|add:1 }} of {{ total }}</p>
+    <h2>{{ question.q }}</h2>
+
+    <form method="POST" action="?step={{ step }}">
+      {% csrf_token %}
+      <div id="grid">
+        {% for opt in question.options %}
+          <button type="submit" name="answer" value="{{ opt }}">{{ opt }}</button>
+        {% endfor %}
+      </div>
+    </form>
+
+    <a href="?step={{ step|add:1 }}" id="skip">Skip →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey. Private, empathetic, and always available.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'chat' %}">AI Chat</a></li>
+        <li><a href="{% url 'journal' %}">Journal</a></li>
+        <li><a href="{% url 'resources' %}">Resources</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Crisis Helpline: 988</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+</body>
+</html>
