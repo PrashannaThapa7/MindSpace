@@ -1,0 +1,51 @@
+body { background: #f0f4f8; color: #333; }
+
+main { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
+main h1 { font-size: 1.6rem; font-weight: 700; color: #0f172a; }
+main > p { color: #64748b; margin-top: 0.25rem; margin-bottom: 2rem; }
+
+.grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+@media (max-width: 900px) { .grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 580px) { .grid { grid-template-columns: 1fr; } }
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  border: 1px solid #e8edf3;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+.card:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  transform: translateY(-3px);
+}
+
+.card i {
+  font-size: 1.3rem;
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.card h3 { font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem; }
+.card > p { font-size: 0.85rem; color: #64748b; line-height: 1.6; }
+.card a { display: inline-flex; align-items: center; gap: 0.3rem; margin-top: 1rem; font-size: 0.82rem; font-weight: 600; color: #4a90e2; text-decoration: none; }
+
+.card:nth-child(1) i { background: #fff0f6; color: #e91e8c; }
+.card:nth-child(2) i { background: #eef4fd; color: #4a90e2; }
+.card:nth-child(3) i { background: #f0fff4; color: #22c55e; }
+.card:nth-child(4) i { background: #fff7ed; color: #f97316; }
+.card:nth-child(5) i { background: #fefce8; color: #ca8a04; }
+.card:nth-child(6) i { background: #f0f9ff; color: #0ea5e9; }
+
+.moods { display: flex; gap: 0.4rem; margin-top: 0.75rem; flex-wrap: wrap; }
+.moods button { border: none; background: #f0f4f8; border-radius: 10px; padding: 0.3rem 0.6rem; font-size: 1rem; cursor: pointer; transition: background 0.15s; }
+.moods button:hover, .moods button.selected { background: #4a90e2; }
+
+.bars { margin-top: 0.75rem; }
+.bars div { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; font-size: 0.75rem; color: #94a3b8; }
+.bars span { flex: 1; background: #f0f4f8; border-radius: 4px; height: 7px; display: block; overflow: hidden; }
+.bars span b { display: block; height: 7px; border-radius: 4px; background: #4a90e2; }
