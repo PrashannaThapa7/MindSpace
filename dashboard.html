@@ -1,0 +1,176 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}" class="active">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+    
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1>Good morning 👋</h1>
+  <p>How are you feeling today? Here's your wellness overview.</p>
+
+  <div class="grid">
+
+    <div class="card">
+      <i class="fa fa-face-smile"></i>
+      <h3>Today's Mood</h3>
+      <p>Track how you're feeling right now.</p>
+      <div class="moods">
+         <button onclick="selectMood(this, 'happy')">😊</button>
+         <button onclick="selectMood(this, 'neutral')">😐</button>
+         <button onclick="selectMood(this, 'sad')">😔</button>
+         <button onclick="selectMood(this, 'angry')">😤</button>
+        <button onclick="selectMood(this, 'tired')">😴</button>
+      </div>
+      <p id="mood-msg" style="margin-top:10px; font-weight:600;"></p>
+    </div>
+
+    <div class="card" onclick="window.location='{% url 'chat' %}'">
+      <i class="fa fa-robot"></i>
+      <h3>AI Chat</h3>
+      <p>Talk to your AI companion anytime you need support.</p>
+      <a href="{% url 'chat' %}">Start chatting →</a>
+    </div>
+
+    <div class="card" onclick="window.location='{% url 'mood_dashboard' %}'">
+      <i class="fa fa-chart-line"></i>
+      <h3>Mood Graph</h3>
+      <p>Your mood trend this week.</p>
+      <div class="bars">
+        <div>Mon <span><b style="width:80%"></b></span></div>
+        <div>Tue <span><b style="width:60%"></b></span></div>
+        <div>Wed <span><b style="width:90%"></b></span></div>
+        <div>Thu <span><b style="width:50%"></b></span></div>
+        <div>Fri <span><b style="width:70%"></b></span></div>
+      </div>
+    </div>
+
+    <div class="card" onclick="window.location='{% url 'resources' %}'">
+      <i class="fa fa-book-open"></i>
+      <h3>Resources</h3>
+      <p>Explore articles, exercises, and guides for mental wellness.</p>
+      <a href="{% url 'resources' %}">Browse resources <i class="fa fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" onclick="window.location='{% url 'journal' %}'">
+      <i class="fa fa-pen-to-square"></i>
+      <h3>Journal</h3>
+      <p>Write your thoughts and reflect on your day privately.</p>
+      <a href="{% url 'journal' %}">Open journal <i class="fa fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card" onclick="window.location='{% url 'privacy' %}'">
+      <i class="fa fa-shield-halved"></i>
+      <h3>Privacy</h3>
+      <p>Your data is encrypted and never shared. Manage your settings.</p>
+      <a href="{% url 'privacy' %}">Manage privacy <i class="fa fa-arrow-right"></i></a>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey. Private, empathetic, and always available.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li><a href="{% url 'chat' %}">AI Chat</a></li>
+        <li><a href="{% url 'journal' %}">Journal</a></li>
+        <li><a href="{% url 'resources' %}">Resources</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Support</h4>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Crisis Helpline: 988</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+<script>
+function selectMood(btn, mood) {
+    const msg = document.getElementById("mood-msg");
+
+    document.querySelectorAll('.moods button').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    fetch("{% url 'save_mood' %}", {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "mood=" + mood
+    })
+    .then(data => {
+    let text = "";
+
+    if (mood === "happy") text = "😊 Great to see you're feeling good!";
+    else if (mood === "neutral") text = "😐 Thanks for checking in.";
+    else if (mood === "sad") text = "💙 It's okay to feel sad. You're not alone.";
+    else if (mood === "angry") text = "😤 Take a deep breath. You got this.";
+    else if (mood === "tired") text = "😴 Rest is important. Take care.";
+
+    msg.style.color = "#4f46e5";
+    msg.innerText = text;
+})
+    .catch(() => {
+        msg.style.color = "red";
+        msg.innerText = "❌ Failed to save mood. Try again.";
+    });
+}
+</script>
+
+</body>
+</html>
