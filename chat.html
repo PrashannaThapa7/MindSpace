@@ -1,0 +1,186 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/chat.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}" class="active">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<div id="layout">
+
+  <aside>
+    <button id="new-btn" onclick="newChat()"><i class="fa fa-plus"></i> New Chat</button>
+    <p>Recent</p>
+    <ul id="history">
+      {% for s in sessions %}
+        <li data-id="{{ s.id }}">{{ s.title }}</li>
+      {% endfor %}
+    </ul>
+  </aside>
+
+  <div id="main">
+    <div id="messages"></div>
+    <div id="bar">
+      <input id="msg" type="text" placeholder="Message MindSpace AI..." onkeydown="if(event.key==='Enter')sendMsg()"/>
+      <button onclick="sendMsg()"><i class="fa fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const BOT_IMG = 'https://cdn-icons-png.flaticon.com/512/4712/4712109.png';
+  let curSession = null;
+
+  function getCookie(n) {
+    const v = document.cookie.match('(^|;) ?' + n + '=([^;]*)(;|$)');
+    return v ? v[2] : '';
+  }
+
+  function showWelcome() {
+    document.getElementById('messages').innerHTML = `
+      <div id="welcome">
+        <img src="${BOT_IMG}" alt="AI"/>
+        <h2>Hi, I'm your MindSpace AI 👋</h2>
+        <p>I'm here to listen. How are you feeling today?</p>
+        <div id="moods">
+          <button onclick="quickSend('I am not feeling good')">😔 Not feeling good</button>
+          <button onclick="quickSend('I am feeling happy')">😊 Feeling happy</button>
+          <button onclick="quickSend('I am feeling sad')">😢 Feeling sad</button>
+          <button onclick="quickSend('I am feeling anxious')">😰 Feeling anxious</button>
+          <button onclick="quickSend('I am feeling tired')">😴 Feeling tired</button>
+          <button onclick="quickSend('I just want to talk')">💬 Just want to talk</button>
+        </div>
+      </div>`;
+  }
+
+  function addBubble(role, text, scroll = true) {
+    const box = document.getElementById('messages');
+    const row = document.createElement('div');
+    row.className = 'row ' + role;
+    if (role === 'bot') row.innerHTML = `<img src="${BOT_IMG}"/><div class="bub">${text}</div>`;
+    else row.innerHTML = `<div class="bub">${text}</div>`;
+    box.appendChild(row);
+    if (scroll) box.scrollTop = box.scrollHeight;
+  }
+
+  async function newChat() {
+    if (curSession) {
+      await fetch("{% url 'new_chat' %}", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCookie('csrftoken') },
+        body: `prev_session_id=${curSession}`
+      });
+    }
+    curSession = null;
+    document.querySelectorAll('#history li').forEach(li => li.classList.remove('active'));
+    showWelcome();
+  }
+
+  async function loadSession(id) {
+    curSession = id;
+    setActive(id);
+    const res = await fetch(`{% url 'chat_history' %}?session_id=${id}`);
+    const data = await res.json();
+    const box = document.getElementById('messages');
+    box.innerHTML = '';
+    if (!data.history.length) { showWelcome(); return; }
+    data.history.forEach(m => addBubble(m.role, m.text, false));
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function setActive(id) {
+    document.querySelectorAll('#history li').forEach(li => {
+      li.classList.toggle('active', li.dataset.id == id);
+    });
+  }
+
+  function quickSend(text) {
+    document.getElementById('msg').value = text;
+    sendMsg();
+  }
+
+  async function sendMsg() {
+    const input = document.getElementById('msg');
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    document.getElementById('welcome')?.remove();
+    addBubble('user', text);
+
+    const box = document.getElementById('messages');
+    const t = document.createElement('div');
+    t.className = 'row bot'; t.id = 'typing';
+    t.innerHTML = `<img src="${BOT_IMG}"/><div class="bub dots"><span></span><span></span><span></span></div>`;
+    box.appendChild(t); box.scrollTop = box.scrollHeight;
+
+    const body = new URLSearchParams({ message: text });
+    if (curSession) body.append('session_id', curSession);
+
+    const res = await fetch("{% url 'chat_api' %}", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRFToken': getCookie('csrftoken') },
+      body: body.toString()
+    });
+    const data = await res.json();
+    document.getElementById('typing')?.remove();
+
+    if (!curSession || curSession !== data.session_id) {
+      curSession = data.session_id;
+      const li = document.createElement('li');
+      li.textContent = data.session_title;
+      li.dataset.id = data.session_id;
+      li.onclick = () => loadSession(data.session_id);
+      document.getElementById('history').prepend(li);
+    }
+    setActive(curSession);
+
+    const activeLi = document.querySelector(`#history li[data-id="${curSession}"]`);
+    if (activeLi) activeLi.textContent = data.session_title;
+
+    addBubble('bot', data.reply);
+  }
+
+  window.addEventListener('beforeunload', () => {
+    if (curSession) {
+      navigator.sendBeacon("{% url 'new_chat' %}", new URLSearchParams({
+        prev_session_id: curSession,
+        csrfmiddlewaretoken: getCookie('csrftoken')
+      }));
+    }
+  });
+
+  document.querySelectorAll('#history li').forEach(li => {
+    li.onclick = () => loadSession(li.dataset.id);
+  });
+
+  const firstLi = document.querySelector('#history li');
+  if (firstLi) loadSession(firstLi.dataset.id);
+  else showWelcome();
+</script>
+
+</body>
+</html>
