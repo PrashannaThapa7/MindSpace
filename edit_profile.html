@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/settings.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1>Profile</h1>
+  <p class="sub">Manage your personal information and answers.</p>
+
+  <section>
+    <h2><i class="fa fa-id-card"></i> Account</h2>
+    <form method="POST" action="{% url 'edit_profile' %}" id="account-form">
+      {% csrf_token %}
+      <div class="row">
+        <div><strong>First Name</strong><span id="fn-text">{{ user.first_name|default:"—" }}</span></div>
+        <input name="first_name" value="{{ user.first_name }}" placeholder="First name"/>
+      </div>
+      <div class="row">
+        <div><strong>Last Name</strong><span id="ln-text">{{ user.last_name|default:"—" }}</span></div>
+        <input name="last_name" value="{{ user.last_name }}" placeholder="Last name"/>
+      </div>
+      <div class="row">
+        <div><strong>Email</strong><span id="em-text">{{ user.email }}</span></div>
+        <input name="email" value="{{ user.email }}" placeholder="Email"/>
+      </div>
+      <div style="display:flex;gap:0.75rem;margin-top:1rem">
+        <a href="#" id="edit-btn" class="btn-link" onclick="toggleEdit(event)"><i class="fa fa-pen"></i> Edit</a>
+        <button type="submit" id="save-btn" class="save-btn" style="display:none;margin:0;padding:0.4rem 1.2rem;font-size:0.85rem">Save</button>
+      </div>
+    </form>
+  </section>
+
+  <section>
+    <h2><i class="fa fa-lock"></i> Security</h2>
+    <div class="row">
+      <div><strong>Password</strong><span>Change your account password</span></div>
+      <a href="{% url 'change_password' %}" class="btn-link">Change Password</a>
+    </div>
+  </section>
+
+  <section>
+    <h2><i class="fa fa-circle-question"></i> Your Answers</h2>
+    {% for ans in user_answers %}
+      <div class="row">
+        <div><strong>{{ ans.question }}</strong></div>
+        <span class="badge">{{ ans.answer }}</span>
+      </div>
+    {% empty %}
+      <p style="color:#bbb;font-size:0.85rem;padding:0.5rem 0">No answers yet.</p>
+    {% endfor %}
+    <a href="{% url 'questions' %}" class="btn-link" style="margin-top:1rem;display:inline-block"><i class="fa fa-pen"></i> Edit Answers</a>
+  </section>
+
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey. Private, empathetic, and always available.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'chat' %}">AI Chat</a></li>
+      <li><a href="{% url 'journal' %}">Journal</a></li>
+      <li><a href="{% url 'resources' %}">Resources</a></li>
+    </ul></div>
+    <div><h4>Support</h4><ul>
+      <li><a href="#">Help Center</a></li>
+      <li><a href="#">Crisis Helpline: 988</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul></div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+<script>
+  function toggleEdit(e) {
+    e.preventDefault();
+    ['fn-text','ln-text','em-text'].forEach(id => document.getElementById(id).style.display = 'none');
+    document.querySelectorAll('#account-form input').forEach(i => i.style.display = 'inline-block');
+    document.getElementById('edit-btn').style.display = 'none';
+    document.getElementById('save-btn').style.display = 'inline-block';
+  }
+</script>
+
+</body>
+</html>
