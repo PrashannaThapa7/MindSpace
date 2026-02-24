@@ -1,0 +1,79 @@
+body { background: #f0f4f8; color: #333; }
+
+main { max-width: 720px; margin: 2rem auto; padding: 0 1.5rem; }
+main h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; }
+.sub { color: #64748b; margin-bottom: 2rem; font-size: 0.95rem; }
+
+section {
+  background: #fff; border-radius: 16px; padding: 1.5rem;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 1.25rem;
+}
+
+section h2 {
+  font-size: 0.95rem; font-weight: 700; color: #4a90e2;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;
+  writing-mode: vertical-rl;
+}
+
+.row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.85rem 0; border-bottom: 1px solid #f0f4f8; gap: 1rem;
+}
+.row:last-child { border-bottom: none; }
+.row > div { display: flex; flex-direction: column; gap: 0.2rem; }
+.row strong { font-size: 0.9rem; font-weight: 600; }
+.row span { font-size: 0.8rem; color: #94a3b8; }
+
+.btn-link {
+  text-decoration: none; font-size: 0.82rem; font-weight: 600;
+  color: #4a90e2; background: #eef4fd; padding: 0.35rem 0.9rem;
+  border-radius: 20px; white-space: nowrap;
+}
+.btn-link:hover { background: #ddeaf9; }
+
+.toggle { position: relative; display: inline-block; width: 44px; height: 24px; flex-shrink: 0; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle span {
+  position: absolute; inset: 0; background: #dde3ec; border-radius: 24px;
+  cursor: pointer; transition: background 0.2s;
+}
+.toggle span::before {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  left: 3px; top: 3px; background: #fff; border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked + span { background: #4a90e2; }
+.toggle input:checked + span::before { transform: translateX(20px); }
+
+.save-btn {
+  background: #4a90e2; color: #fff; border: none; border-radius: 20px;
+  padding: 0.65rem 2rem; font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; margin-bottom: 1.25rem;
+}
+.save-btn:hover { background: #357abd; }
+
+section.danger { border: 1.5px solid #fee2e2; }
+section.danger h2 { color: #ef4444; }
+section.danger .row { border-bottom-color: #fef2f2; }
+
+.danger-btn {
+  background: #fff; color: #ef4444; border: 1.5px solid #ef4444;
+  border-radius: 20px; padding: 0.4rem 1rem; font-size: 0.82rem;
+  font-weight: 600; cursor: pointer; white-space: nowrap;
+}
+.danger-btn:hover { background: #fef2f2; }
+.delete-btn { background: #ef4444; color: #fff; }
+.delete-btn:hover { background: #dc2626; }
+
+.badge {
+  background: #eef4fd; color: #4a90e2; padding: 0.2rem 0.7rem;
+  border-radius: 20px; font-size: 0.8rem; font-weight: 600; white-space: nowrap;
+}
+
+#account-form input {
+  display: none;
+  border: 1.5px solid #dde3ec; border-radius: 10px;
+  padding: 0.4rem 0.75rem; font-size: 0.88rem; outline: none;
+  font-family: inherit; width: 180px;
+}
+#account-form input:focus { border-color: #4a90e2; }
