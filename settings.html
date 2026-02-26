@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Settings</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/settings.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1>Settings</h1>
+  <p class="sub">Manage your account, privacy, and preferences.</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save_settings"/>
+
+    <section>
+      <h2><i class="fa fa-user-circle"></i> Account &amp; Identity</h2>
+      <div class="row">
+        <div>
+          <strong>{{ user.get_full_name|default:user.username }}</strong>
+          <span>{{ user.email }}</span>
+        </div>
+        <a href="{% url 'edit_profile' %}" class="btn-link">Edit Profile</a>
+      </div>
+      <div class="row">
+        <div>
+          <strong>Password</strong>
+          <span>Change your account password</span>
+        </div>
+        <a href="{% url 'change_password' %}" class="btn-link">Change Password</a>
+      </div>
+    </section>
+
+    <section>
+      <h2><i class="fa fa-shield-halved"></i> Privacy &amp; Data Control</h2>
+      <div class="row">
+        <div>
+          <strong>Store Chat History</strong>
+          <span>Save conversations to your account across devices</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" name="store_chat_history" {% if s.store_chat_history %}checked{% endif %}/>
+          <span></span>
+        </label>
+      </div>
+      <div class="row">
+        <div>
+          <strong>Private Journal</strong>
+          <span>Keep journal entries strictly private (disable AI weekly insights)</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" name="journal_private" {% if s.journal_private %}checked{% endif %}/>
+          <span></span>
+        </label>
+      </div>
+    </section>
+
+    <section>
+      <h2><i class="fa fa-bell"></i> Notification Preferences</h2>
+      <div class="row">
+        <div>
+          <strong>Email Alerts</strong>
+          <span>Receive system updates and important notices</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" name="email_alerts" {% if s.email_alerts %}checked{% endif %}/>
+          <span></span>
+        </label>
+      </div>
+      <div class="row">
+        <div>
+          <strong>Weekly Summary</strong>
+          <span>Get an AI-generated mental health report every week</span>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" name="weekly_summary" {% if s.weekly_summary %}checked{% endif %}/>
+          <span></span>
+        </label>
+      </div>
+    </section>
+
+    <button type="submit" class="save-btn">Save Settings</button>
+  </form>
+
+  <section class="danger">
+    <h2><i class="fa fa-triangle-exclamation"></i> Danger Zone</h2>
+
+    <div class="row">
+      <div>
+        <strong>Purge All Data</strong>
+        <span>Delete all your journals, chat messages, and sessions. Your account stays active.</span>
+      </div>
+      <form method="POST" onsubmit="return confirm('This will permanently delete all your data. Are you sure?')">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="purge_data"/>
+        <button type="submit" class="danger-btn">Purge Data</button>
+      </form>
+    </div>
+
+    <div class="row">
+      <div>
+        <strong>Delete Account</strong>
+        <span>Permanently delete your account and all associated data. This cannot be undone.</span>
+      </div>
+      <form method="POST" onsubmit="return confirm('This will permanently delete your account. Are you absolutely sure?')">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete_account"/>
+        <button type="submit" class="danger-btn delete-btn">Delete Account</button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'chat' %}">AI Chat</a></li>
+      <li><a href="{% url 'journal' %}">Journal</a></li>
+      <li><a href="{% url 'resources' %}">Resources</a></li>
+    </ul></div>
+    <div><h4>Support</h4><ul>
+      <li><a href="#">Help Center</a></li>
+      <li><a href="#">Crisis Helpline: 988</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul></div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+</body>
+</html>
