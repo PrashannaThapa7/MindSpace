@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Journal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/journal.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}" class="active">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div id="top">
+    <div>
+      <h1>My Journal</h1>
+      <p>Your thoughts, reflections, and conversations.</p>
+    </div>
+    <button id="write-btn" onclick="toggleForm()"><i class="fa fa-pen"></i> New Entry</button>
+  </div>
+
+  <div id="write-form" style="display:none">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="save"/>
+      <input type="text" name="title" placeholder="Title (optional)" value="{{ prompt }}"/>
+
+      <p style="font-size:0.85rem;font-weight:600;color:#334155;margin-bottom:0.5rem">How are you feeling?</p>
+      <div id="mood-pick">
+        {% for emoji, label in moods %}
+        <label>
+          <input type="radio" name="mood" value="{{ label }}" style="display:none"/>
+          <span>{{ emoji }}</span>
+          <small>{{ label }}</small>
+        </label>
+        {% endfor %}
+      </div>
+
+      <textarea name="content" rows="6" placeholder="Write your thoughts here..." required></textarea>
+      <div style="display:flex;gap:0.75rem;margin-top:0.75rem">
+        <button type="submit">Save Entry</button>
+        <button type="button" onclick="toggleForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="tabs">
+    <button class="tab active" onclick="switchTab('all',this)">All</button>
+    <button class="tab" onclick="switchTab('chat',this)">Chat Journal</button>
+    <button class="tab" onclick="switchTab('writing',this)">Writing Journal</button>
+  </div>
+
+  <div id="all" class="panel">
+    {% if all_entries %}
+      <div class="grid">{% for e in all_entries %}{% include "mental/journal_card.html" with e=e %}{% endfor %}</div>
+    {% else %}<p class="empty">No entries yet.</p>{% endif %}
+  </div>
+
+  <div id="chat" class="panel" style="display:none">
+    {% if chat_entries %}
+      <div class="grid">{% for e in chat_entries %}{% include "mental/journal_card.html" with e=e %}{% endfor %}</div>
+    {% else %}<p class="empty">No chat journals yet. Start a chat — it saves here automatically.</p>{% endif %}
+  </div>
+
+  <div id="writing" class="panel" style="display:none">
+    {% if writing_entries %}
+      <div class="grid">{% for e in writing_entries %}{% include "mental/journal_card.html" with e=e %}{% endfor %}</div>
+    {% else %}<p class="empty">No writing entries yet. Click "New Entry" to start.</p>{% endif %}
+  </div>
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'chat' %}">AI Chat</a></li>
+      <li><a href="{% url 'journal' %}">Journal</a></li>
+      <li><a href="{% url 'resources' %}">Resources</a></li>
+    </ul></div>
+    <div><h4>Support</h4><ul>
+      <li><a href="#">Help Center</a></li>
+      <li><a href="#">Crisis Helpline: 988</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul></div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).style.display = 'block';
+    btn.classList.add('active');
+  }
+  function toggleForm() {
+    const f = document.getElementById('write-form');
+    f.style.display = f.style.display === 'none' ? 'block' : 'none';
+  }
+  function toggleFull(a) {
+    const full = a.parentElement.nextElementSibling;
+    const open = full.style.display === 'none';
+    full.style.display = open ? 'block' : 'none';
+    a.textContent = open ? 'Show less' : 'Read more';
+    return false;
+  }
+  // mood picker highlight
+  document.querySelectorAll('#mood-pick label').forEach(l => {
+    l.addEventListener('click', () => {
+      document.querySelectorAll('#mood-pick label').forEach(x => x.classList.remove('selected'));
+      l.classList.add('selected');
+    });
+  });
+  {% if prompt %}document.getElementById('write-form').style.display = 'block';{% endif %}
+</script>
+
+</body>
+</html>
