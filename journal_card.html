@@ -1,0 +1,28 @@
+<div class="card">
+  <div class="card-top">
+    <div>
+      <strong>{{ e.title|default:"Untitled" }}</strong>
+      <div style="display:flex;gap:0.4rem;margin-top:0.3rem;flex-wrap:wrap">
+        {% if e.source == 'chat' %}<span class="tag">💬 Chat</span>{% endif %}
+        {% if e.mood %}
+          <span class="tag mood-tag">
+            {% if e.mood == 'Happy' %}😊{% elif e.mood == 'Sad' %}😔{% elif e.mood == 'Angry' %}😤{% elif e.mood == 'Anxious' %}😰{% elif e.mood == 'Tired' %}😴{% else %}😐{% endif %}
+            {{ e.mood }}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+    <span style="font-size:0.78rem;color:#aaa;white-space:nowrap">{{ e.created_at|date:"M d, Y" }}</span>
+  </div>
+  <p>{{ e.content|truncatechars:150 }}</p>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:0.75rem">
+    <a href="#" onclick="toggleFull(this)">Read more</a>
+    <form method="POST" style="margin:0">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="delete"/>
+      <input type="hidden" name="id" value="{{ e.id }}"/>
+      <button type="submit" class="del"><i class="fa fa-trash"></i></button>
+    </form>
+  </div>
+  <div class="full" style="display:none">{{ e.content|linebreaksbr }}</div>
+</div>
