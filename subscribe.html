@@ -1,0 +1,145 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Subscribe — MindSpace Journal</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <style>
+    body { background: #f0f4f8; }
+    main { max-width: 860px; margin: 3rem auto; padding: 0 1.5rem; text-align: center; }
+    h1 { font-size: 1.8rem; font-weight: 800; color: #0f172a; margin-bottom: 0.5rem; }
+    main > p { color: #64748b; margin-bottom: 2.5rem; font-size: 1rem; }
+
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 640px; margin: 0 auto 2rem; }
+    @media (max-width: 540px) { .plans { grid-template-columns: 1fr; } }
+
+    .plan {
+      background: #fff; border-radius: 20px; padding: 2rem 1.75rem;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.07); border: 2px solid #e8edf3;
+      position: relative; text-align: left;
+    }
+    .plan.popular { border-color: #4a90e2; }
+    .plan .badge {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      background: #4a90e2; color: #fff; font-size: 0.75rem; font-weight: 700;
+      padding: 0.2rem 0.9rem; border-radius: 20px; white-space: nowrap;
+    }
+    .plan h2 { font-size: 1.1rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+    .plan .price { font-size: 2rem; font-weight: 800; color: #4a90e2; margin-bottom: 0.25rem; }
+    .plan .price span { font-size: 0.9rem; font-weight: 500; color: #64748b; }
+    .plan .save { font-size: 0.8rem; color: #22c55e; font-weight: 600; margin-bottom: 1rem; }
+    .plan ul { list-style: none; margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .plan ul li { font-size: 0.88rem; color: #475569; display: flex; align-items: center; gap: 0.5rem; }
+    .plan ul li::before { content: '✓'; color: #22c55e; font-weight: 700; }
+
+    .pay-btn {
+      width: 100%; background: #4a90e2; color: #fff; border: none;
+      border-radius: 12px; padding: 0.75rem; font-size: 0.95rem;
+      font-weight: 700; cursor: pointer; display: flex; align-items: center;
+      justify-content: center; gap: 0.5rem;
+    }
+    .pay-btn:hover { background: #357abd; }
+
+    .esewa-logo { height: 20px; vertical-align: middle; }
+    .note { font-size: 0.8rem; color: #94a3b8; margin-top: 1.5rem; }
+    .back { display: inline-block; margin-top: 1rem; font-size: 0.85rem; color: #94a3b8; text-decoration: none; }
+    .back:hover { color: #4a90e2; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <div style="font-size:2.5rem;margin-bottom:0.75rem">📓</div>
+  <h1>Unlock Your Journal</h1>
+  <p>Subscribe to access the full journal feature — write your thoughts, track emotions, and save chat sessions.</p>
+
+  <div class="plans">
+
+    <!-- Monthly -->
+    <div class="plan">
+      <h2>Monthly</h2>
+      <div class="price">Rs 199 <span>/ month</span></div>
+      <div class="save">&nbsp;</div>
+      <ul>
+        <li>Unlimited journal entries</li>
+        <li>Mood tracking per entry</li>
+        <li>Auto-save chat sessions</li>
+        <li>Cancel anytime</li>
+      </ul>
+      <form method="POST" action="{{ payment_url }}">
+        {% csrf_token %}
+        <input type="hidden" name="amount" value="{{ plans.monthly.amount }}"/>
+        <input type="hidden" name="tax_amount" value="0"/>
+        <input type="hidden" name="total_amount" value="{{ plans.monthly.amount }}"/>
+        <input type="hidden" name="transaction_uuid" value="{{ plans.monthly.tx_uuid }}"/>
+        <input type="hidden" name="product_code" value="{{ product_code }}"/>
+        <input type="hidden" name="product_service_charge" value="0"/>
+        <input type="hidden" name="product_delivery_charge" value="0"/>
+        <input type="hidden" name="success_url" value="{{ success_url }}"/>
+        <input type="hidden" name="failure_url" value="{{ failure_url }}"/>
+        <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code"/>
+        <input type="hidden" name="signature" value="{{ plans.monthly.signature }}"/>
+        <button type="submit" class="pay-btn">
+           Pay with MyPay
+        </button>
+      </form>
+    </div>
+
+    <!-- Yearly -->
+    <div class="plan popular">
+      <span class="badge">Best Value</span>
+      <h2>Yearly</h2>
+      <div class="price">Rs 1499 <span>/ year</span></div>
+      <div class="save">Save 37% vs monthly</div>
+      <ul>
+        <li>Everything in Monthly</li>
+        <li>Priority support</li>
+        <li>Early access to features</li>
+        <li>12 months access</li>
+      </ul>
+      <form method="POST" action="{{ payment_url }}">
+        {% csrf_token %}
+        <input type="hidden" name="amount" value="{{ plans.yearly.amount }}"/>
+        <input type="hidden" name="tax_amount" value="0"/>
+        <input type="hidden" name="total_amount" value="{{ plans.yearly.amount }}"/>
+        <input type="hidden" name="transaction_uuid" value="{{ plans.yearly.tx_uuid }}"/>
+        <input type="hidden" name="product_code" value="{{ product_code }}"/>
+        <input type="hidden" name="product_service_charge" value="0"/>
+        <input type="hidden" name="product_delivery_charge" value="0"/>
+        <input type="hidden" name="success_url" value="{{ success_url }}"/>
+        <input type="hidden" name="failure_url" value="{{ failure_url }}"/>
+        <input type="hidden" name="signed_field_names" value="total_amount,transaction_uuid,product_code"/>
+        <input type="hidden" name="signature" value="{{ plans.yearly.signature }}"/>
+        <button type="submit" class="pay-btn">
+         Pay with MyPay
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <p class="note">🔒 Payments are processed securely via eSewa. Sandbox mode — use test credentials.</p>
+  <a href="{% url 'dashboard' %}" class="back">← Back to Dashboard</a>
+</main>
+
+</body>
+</html>
