@@ -1,0 +1,18 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Failed</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}"/>
+</head>
+<body>
+<main class="card" style="text-align:center">
+  <div class="logo" style="background:#ef4444;margin:0 auto 1rem">✕</div>
+  <h2>Payment Failed</h2>
+  <p style="color:#64748b;margin:0.75rem 0 1.5rem">Your payment was not completed. Please try again.</p>
+  <a href="{% url 'subscribe' %}"><button type="button">Try Again</button></a>
+  <a href="{% url 'dashboard' %}" class="back">← Back to Dashboard</a>
+</main>
+</body>
+</html>
