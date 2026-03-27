@@ -1,0 +1,13 @@
+body { background: #f0f4f8; color: #333; }
+main { padding: 2rem 3%; }
+main h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.4rem; }
+main > p { color: #777; margin-bottom: 2rem; }
+main h2 { font-size: 1.1rem; font-weight: 600; color: #4a90e2; margin: 2rem 0 1rem; writing-mode: vertical-rl; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 1.5rem; }
+
+.card { background: #fff; border-radius: 16px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+.card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+.card i { font-size: 2rem; color: #4a90e2; margin-bottom: 1rem; display: block; }
+.card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+.card p  { font-size: 0.9rem; color: #888; line-height: 1.6; }
