@@ -1,0 +1,294 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resources</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/resources.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}" class="active">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1>Mental Health Resources</h1>
+  <p>Explore articles, exercises, and support options to improve your well-being.</p>
+
+  <h2>Learning &amp; Articles</h2>
+  <div class="grid">
+    <div class="card" onclick="openModal('stress')"><i class="fa fa-book"></i><h3>Understanding Stress</h3><p>Learn how stress affects your mind and body.</p></div>
+    <div class="card" onclick="openModal('anxiety')"><i class="fa fa-brain"></i><h3>Coping with Anxiety</h3><p>Tips for managing anxious thoughts and improving wellbeing.</p></div>
+  </div>
+
+  <h2>Exercises &amp; Journaling</h2>
+  <div class="grid">
+    <div class="card" onclick="openModal('meditation')"><i class="fa fa-spa"></i><h3>Mindfulness &amp; Meditation</h3><p>Guided timer-based meditation sessions.</p></div>
+    <div class="card" onclick="openModal('breathing')"><i class="fa fa-wind"></i><h3>Breathing Exercises</h3><p>Interactive breathing timer with animated guidance.</p></div>
+    <div class="card" onclick="openModal('journal')"><i class="fa fa-pen-to-square"></i><h3>Daily Journal Prompts</h3><p>Reflect on your thoughts and emotions every day.</p></div>
+  </div>
+
+  <h2>Support &amp; Community</h2>
+  <div class="grid">
+    <div class="card" onclick="openModal('helpline')"><i class="fa fa-phone"></i><h3>Mental Health Helpline</h3><p>Immediate support for crisis situations.</p></div>
+    <div class="card" onclick="openModal('community')"><i class="fa fa-users"></i><h3>Community Support Groups</h3><p>Connect with others facing similar challenges.</p></div>
+  </div>
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'chat' %}">AI Chat</a></li>
+      <li><a href="{% url 'journal' %}">Journal</a></li>
+    </ul></div>
+    <div><h4>Support</h4><ul>
+      <li><a href="#">Help Center</a></li>
+      <li><a href="#">Crisis Helpline: 988</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul></div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+<div id="modal" onclick="if(event.target===this)closeModal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:1rem">
+  <div id="modal-box" style="background:#fff;border-radius:20px;padding:2rem;max-width:560px;width:100%;max-height:85vh;overflow-y:auto;position:relative">
+    <button onclick="closeModal()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.2rem;cursor:pointer;color:#aaa">✕</button>
+    <h2 id="modal-title" style="font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;color:#0f172a"></h2>
+    <div id="modal-body" style="font-size:0.9rem;color:#475569;line-height:1.7"></div>
+  </div>
+</div>
+
+<script>
+const prompts = [
+  "What am I feeling right now, and where do I feel it in my body?",
+  "What is one thing I am proud of myself for this week?",
+  "What is draining my energy lately, and what can I do about it?",
+  "Describe a moment recently when I felt at peace.",
+  "What would I tell a close friend who was feeling the way I feel today?",
+  "What are three things I am grateful for right now?",
+  "What is one small step I can take tomorrow to feel better?"
+];
+
+const modalContent = {
+  stress: {
+    title: 'Understanding Stress',
+    html: '<p>Stress is your body\'s natural response to pressure.</p><ul style="margin:1rem 0 0 1.2rem;display:flex;flex-direction:column;gap:0.5rem"><li><strong>Identify triggers</strong> — Notice what situations cause stress.</li><li><strong>Physical signs</strong> — Tension, headaches, fatigue, trouble sleeping.</li><li><strong>Reframe thinking</strong> — Ask: "Is this within my control?"</li><li><strong>Take breaks</strong> — 5-minute breaks every hour reduce cortisol.</li><li><strong>Move your body</strong> — A 10-minute walk releases tension.</li><li><strong>Talk about it</strong> — Sharing stress cuts its intensity in half.</li></ul>'
+  },
+  anxiety: {
+    title: 'Coping with Anxiety',
+    html: '<p>These strategies help manage anxious thoughts:</p><ul style="margin:1rem 0 0 1.2rem;display:flex;flex-direction:column;gap:0.5rem"><li><strong>5-4-3-2-1 Grounding</strong> — Name 5 things you see, 4 touch, 3 hear, 2 smell, 1 taste.</li><li><strong>Challenge thoughts</strong> — "What\'s the evidence this will happen?"</li><li><strong>Limit caffeine</strong> — It amplifies anxiety. Switch to herbal tea.</li><li><strong>Progressive relaxation</strong> — Tense and release each muscle group.</li><li><strong>Journaling</strong> — Writing worries down reduces their power.</li></ul>'
+  },
+  meditation: {
+    title: 'Mindfulness & Meditation',
+    html: `<p>Choose a session length and follow the guided timer.</p>
+      <div style="display:flex;gap:0.5rem;margin:1rem 0;flex-wrap:wrap">
+        <button onclick="startMeditation(3)" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">3 min</button>
+        <button onclick="startMeditation(5)" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">5 min</button>
+        <button onclick="startMeditation(10)" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">10 min</button>
+      </div>
+      <div id="med-box" style="text-align:center;padding:1.5rem;background:#f8faff;border-radius:16px;display:none">
+        <div id="med-ring" style="width:130px;height:130px;border-radius:50%;border:6px solid #4a90e2;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center">
+          <span id="med-time" style="font-size:1.6rem;font-weight:800;color:#4a90e2">--:--</span>
+        </div>
+        <p id="med-step" style="font-size:1rem;font-weight:600;color:#334155;margin-bottom:0.4rem"></p>
+        <p id="med-hint" style="font-size:0.85rem;color:#888;margin-bottom:1rem;max-width:300px;margin-left:auto;margin-right:auto"></p>
+        <div style="display:flex;gap:0.75rem;justify-content:center">
+          <button id="med-btn" onclick="toggleMed()" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.5rem 1.5rem;cursor:pointer;font-weight:600">Start</button>
+          <button onclick="resetMed()" style="background:#f0f4f8;color:#555;border:none;border-radius:20px;padding:0.5rem 1.5rem;cursor:pointer">Reset</button>
+        </div>
+      </div>`
+  },
+  breathing: {
+    title: 'Breathing Exercises',
+    html: `<p>Choose a technique and follow the animated timer.</p>
+      <div style="display:flex;gap:0.5rem;margin:1rem 0;flex-wrap:wrap">
+        <button onclick="startBreathing('box')" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">Box (4-4-4-4)</button>
+        <button onclick="startBreathing('478')" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">4-7-8</button>
+        <button onclick="startBreathing('belly')" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.4rem 1rem;cursor:pointer;font-size:0.85rem">Belly Breathing</button>
+      </div>
+      <div id="breath-box" style="text-align:center;padding:1.5rem;background:#f8faff;border-radius:16px;display:none">
+        <div id="breath-circle" style="width:120px;height:120px;border-radius:50%;background:#4a90e2;margin:0 auto 1rem;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1rem;font-weight:700;transition:transform 3s ease">Ready</div>
+        <p id="breath-phase" style="font-size:1.1rem;font-weight:600;color:#334155;margin-bottom:0.3rem"></p>
+        <p id="breath-count" style="font-size:2.5rem;font-weight:800;color:#4a90e2;margin-bottom:0.5rem">-</p>
+        <p id="breath-desc" style="font-size:0.82rem;color:#888;margin-bottom:1rem"></p>
+        <div style="display:flex;gap:0.75rem;justify-content:center">
+          <button id="breath-start" onclick="toggleBreath()" style="background:#4a90e2;color:#fff;border:none;border-radius:20px;padding:0.5rem 1.5rem;cursor:pointer;font-weight:600">Start</button>
+          <button onclick="resetBreath()" style="background:#f0f4f8;color:#555;border:none;border-radius:20px;padding:0.5rem 1.5rem;cursor:pointer">Reset</button>
+        </div>
+        <p id="breath-cycles" style="font-size:0.8rem;color:#aaa;margin-top:0.75rem"></p>
+      </div>`
+  },
+  journal: {
+    title: 'Daily Journal Prompts',
+    html: '<p>Pick a prompt and write your response in your journal.</p><div id="prompt-list" style="margin-top:1rem"></div>'
+  },
+  helpline: {
+    title: 'Mental Health Helpline',
+    html: '<p>If you are in crisis, reach out now:</p><div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:1rem"><div style="background:#fff0f0;border-radius:12px;padding:1rem;border-left:4px solid #ef4444"><strong>Crisis Text Line</strong> — 988 Nepal</div><div style="background:#f0f6ff;border-radius:12px;padding:1rem;border-left:4px solid #4a90e2"><strong>988 Lifeline</strong> — Call or text 988</div><div style="background:#f0fff4;border-radius:12px;padding:1rem;border-left:4px solid #22c55e"><strong>International</strong> — <a href="https://www.iasp.info/resources/Crisis_Centres/" target="_blank" style="color:#4a90e2">Find your country\'s helpline</a></div></div><p style="margin-top:1rem;font-size:0.85rem;color:#888">You are not alone. Reaching out is a sign of strength.</p>'
+  },
+  community: {
+    title: 'Community Support Groups',
+    html: '<div style="display:flex;flex-direction:column;gap:0.75rem;margin-top:0.5rem"><div style="background:#f8faff;border-radius:12px;padding:1rem"><strong>7 Cups</strong> — <a href="https://www.7cups.com" target="_blank" style="color:#4a90e2">7cups.com</a></div><div style="background:#f8faff;border-radius:12px;padding:1rem"><strong>Reddit r/mentalhealth</strong> — 1M+ members.</div><div style="background:#f8faff;border-radius:12px;padding:1rem"><strong>NAMI</strong> — <a href="https://www.nami.org/Support-Education/Support-Groups" target="_blank" style="color:#4a90e2">nami.org</a></div><div style="background:#f8faff;border-radius:12px;padding:1rem"><strong>MindSpace AI Chat</strong> — <a href="/chat/" style="color:#4a90e2">Start chatting →</a></div></div>'
+  }
+};
+
+function openModal(key) {
+  resetBreath(); resetMed();
+  document.getElementById('modal-title').textContent = modalContent[key].title;
+  document.getElementById('modal-body').innerHTML = modalContent[key].html;
+  document.getElementById('modal').style.display = 'flex';
+  if (key === 'journal') {
+    const list = document.getElementById('prompt-list');
+    prompts.forEach(p => {
+      const div = document.createElement('div');
+      div.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid #f0f4f8';
+      div.innerHTML = `<span style="font-size:0.88rem;color:#334155;line-height:1.5">${p}</span><a href="/journal/?title=${encodeURIComponent(p)}" style="flex-shrink:0;background:#4a90e2;color:#fff;text-decoration:none;padding:0.3rem 0.85rem;border-radius:20px;font-size:0.8rem;font-weight:600">Write</a>`;
+      list.appendChild(div);
+    });
+  }
+}
+
+function closeModal() {
+  resetBreath(); resetMed();
+  document.getElementById('modal').style.display = 'none';
+}
+
+// BREATHING
+const breathTech = {
+  box:   { phases:['Inhale','Hold','Exhale','Hold'], times:[4,4,4,4], desc:'Box Breathing — stay calm under pressure' },
+  '478': { phases:['Inhale','Hold','Exhale'], times:[4,7,8], desc:'4-7-8 — great for sleep and anxiety' },
+  belly: { phases:['Inhale slowly','Exhale slowly'], times:[5,5], desc:'Belly Breathing — only your belly should rise' }
+};
+let bTimer=null, bRunning=false, bPhase=0, bTech=null, bCycles=0;
+
+function startBreathing(key) {
+  bTech=breathTech[key]; bPhase=0; bCycles=0; bRunning=false; clearTimeout(bTimer);
+  document.getElementById('breath-box').style.display='block';
+  document.getElementById('breath-desc').textContent=bTech.desc;
+  document.getElementById('breath-phase').textContent=bTech.phases[0];
+  document.getElementById('breath-count').textContent=bTech.times[0];
+  document.getElementById('breath-cycles').textContent='';
+  document.getElementById('breath-start').textContent='Start';
+}
+
+function toggleBreath() {
+  if(!bTech) return;
+  bRunning=!bRunning;
+  document.getElementById('breath-start').textContent=bRunning?'Pause':'Resume';
+  if(bRunning) runBreath(); else clearTimeout(bTimer);
+}
+
+function runBreath() {
+  if(!bRunning) return;
+  const phase=bTech.phases[bPhase], dur=bTech.times[bPhase];
+  document.getElementById('breath-phase').textContent=phase;
+  const c=document.getElementById('breath-circle');
+  c.textContent=phase;
+  c.style.transform=phase.includes('Inhale')?'scale(1.4)':phase.includes('Exhale')?'scale(1)':'scale(1.2)';
+  let n=dur;
+  document.getElementById('breath-count').textContent=n;
+  const tick=()=>{
+    if(!bRunning) return;
+    n--;
+    document.getElementById('breath-count').textContent=n;
+    if(n<=0){
+      bPhase=(bPhase+1)%bTech.phases.length;
+      if(bPhase===0){ bCycles++; document.getElementById('breath-cycles').textContent=`Cycles: ${bCycles}`; }
+      runBreath();
+    } else { bTimer=setTimeout(tick,1000); }
+  };
+  bTimer=setTimeout(tick,1000);
+}
+
+function resetBreath() {
+  clearTimeout(bTimer); bRunning=false; bTech=null;
+  const b=document.getElementById('breath-box'); if(b) b.style.display='none';
+}
+
+// MEDITATION
+const medSteps=[
+  {step:'Settle in',hint:'Find a comfortable position. Close your eyes or soften your gaze.'},
+  {step:'Breathe deeply',hint:'Take 3 slow deep breaths. Inhale 4 counts, exhale 6.'},
+  {step:'Focus on breath',hint:'Notice the natural rhythm of your breath without changing it.'},
+  {step:'Body scan',hint:'Scan from head to toe. Notice any tension without judgment.'},
+  {step:'Stay present',hint:'When your mind wanders, gently return to your breath.'},
+  {step:'Coming back',hint:'Slowly open your eyes. Take one final deep breath.'}
+];
+let mTimer=null, mRunning=false, mTotal=0, mLeft=0;
+
+function startMeditation(mins) {
+  mTotal=mins*60; mLeft=mTotal; mRunning=false; clearInterval(mTimer);
+  document.getElementById('med-box').style.display='block';
+  document.getElementById('med-btn').textContent='Start';
+  updateMed();
+}
+
+function updateMed() {
+  const m=Math.floor(mLeft/60), s=mLeft%60;
+  document.getElementById('med-time').textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const idx=Math.min(Math.floor((1-mLeft/mTotal)*medSteps.length),medSteps.length-1);
+  document.getElementById('med-step').textContent=medSteps[idx].step;
+  document.getElementById('med-hint').textContent=medSteps[idx].hint;
+}
+
+function toggleMed() {
+  if(!mTotal) return;
+  mRunning=!mRunning;
+  document.getElementById('med-btn').textContent=mRunning?'Pause':'Resume';
+  if(mRunning){
+    mTimer=setInterval(()=>{
+      mLeft--;
+      updateMed();
+      if(mLeft<=0){
+        clearInterval(mTimer);
+        document.getElementById('med-step').textContent='🎉 Session Complete!';
+        document.getElementById('med-hint').textContent='Well done. Take a moment to appreciate how you feel.';
+        document.getElementById('med-btn').textContent='Done';
+        mRunning=false;
+      }
+    },1000);
+  } else { clearInterval(mTimer); }
+}
+
+function resetMed() {
+  clearInterval(mTimer); mRunning=false; mTotal=0;
+  const b=document.getElementById('med-box'); if(b) b.style.display='none';
+}
+</script>
+
+</body>
+</html>
