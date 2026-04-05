@@ -1,0 +1,23 @@
+body { background: #f0f4f8; color: #333; }
+main { max-width: 900px; margin: 2rem auto; padding: 0 1.5rem; }
+main h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: 0.3rem; }
+.sub { color: #64748b; margin-bottom: 2rem; font-size: 0.95rem; }
+
+.summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-bottom: 1.5rem; }
+@media (max-width: 600px) { .summary { grid-template-columns: 1fr; } }
+
+.scard { background: #fff; border-radius: 16px; padding: 1.25rem 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 1rem; }
+.scard i { font-size: 1.5rem; color: #4a90e2; width: 44px; height: 44px; background: #eef4fd; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.scard span { font-size: 0.78rem; color: #94a3b8; display: block; }
+.scard strong { font-size: 1.1rem; font-weight: 700; color: #0f172a; }
+
+section { background: #fff; border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 1.25rem; }
+section h2 { font-size: 0.95rem; font-weight: 700; color: #4a90e2; margin-bottom: 1.25rem; writing-mode: vertical-rl; }
+
+.mood-list { display: flex; flex-direction: column; }
+.mood-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #f0f4f8; }
+.mood-row:last-child { border-bottom: none; }
+.emoji { font-size: 1.6rem; width: 40px; text-align: center; flex-shrink: 0; }
+.mood-row strong { font-size: 0.9rem; font-weight: 600; display: block; }
+.mood-row span { font-size: 0.78rem; color: #94a3b8; }
+.empty { color: #bbb; font-size: 0.875rem; }
