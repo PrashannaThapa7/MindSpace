@@ -1,0 +1,165 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mood Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="{% static 'css/mood_dashboard.css' %}"/>
+  <link rel="stylesheet" href="{% static 'css/base.css' %}"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<nav>
+  <span class="logo">MindSpace</span>
+  <ul>
+    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li><a href="{% url 'chat' %}">Chat</a></li>
+    <li><a href="{% url 'resources' %}">Resources</a></li>
+    <li><a href="{% url 'journal' %}">Journal</a></li>
+  </ul>
+  <div class="profile">
+    <i class="fa fa-user"></i>
+    <div class="dropdown">
+      <a href="{% url 'edit_profile' %}">Profile</a>
+      <a href="{% url 'settings' %}">Settings</a>
+      <a href="{% url 'logout' %}" style="color:#e53e3e">Logout</a>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <h1>Mood Dashboard</h1>
+  <p class="sub">Your emotional wellness overview for the last 7 days.</p>
+
+  <!-- Summary cards -->
+  <div class="summary">
+    <div class="scard">
+      <i class="fa fa-face-smile"></i>
+      <div>
+        <span>Most Common Mood</span>
+        <strong>
+          {% if most_common %}
+            {% with m=most_common.mood %}
+              {% if m == 'happy' %}😊{% elif m == 'neutral' %}😐{% elif m == 'sad' %}😔{% elif m == 'angry' %}😤{% elif m == 'tired' %}😴{% elif m == 'anxious' %}😰{% endif %}
+              {{ m|capfirst }}
+            {% endwith %}
+          {% else %}
+            No data yet
+          {% endif %}
+        </strong>
+      </div>
+    </div>
+
+    <div class="scard">
+      <i class="fa fa-calendar-check"></i>
+      <div>
+        <span>Total Check-ins</span>
+        <strong>{{ total_checkins }}</strong>
+      </div>
+    </div>
+
+    <div class="scard">
+      <i class="fa fa-fire"></i>
+      <div>
+        <span>Current Streak</span>
+        <strong>{{ streak }} day{% if streak != 1 %}s{% endif %}</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weekly chart -->
+  <section>
+    <h2>Weekly Mood Check-ins</h2>
+    <canvas id="moodChart" height="80"></canvas>
+  </section>
+
+  <!-- Today's check-ins -->
+  <section>
+    <h2>Today's Check-ins</h2>
+    <div class="mood-list">
+      {% for m in todays_moods %}
+        <div class="mood-row">
+          <span class="emoji">
+            {% if m.mood == 'happy' %}😊
+            {% elif m.mood == 'neutral' %}😐
+            {% elif m.mood == 'sad' %}😔
+            {% elif m.mood == 'angry' %}😤
+            {% elif m.mood == 'tired' %}😴
+            {% elif m.mood == 'anxious' %}😰
+            {% else %}🙂{% endif %}
+          </span>
+          <div>
+            <strong>{{ m.mood|capfirst }}</strong>
+            <span>{{ m.date|time:"g:i A" }}</span>
+          </div>
+        </div>
+      {% empty %}
+        <p class="empty">No check-ins today yet. Go to the <a href="{% url 'dashboard' %}">Dashboard</a> to log your mood.</p>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div id="footer-grid">
+    <div>
+      <span class="logo">MindSpace</span>
+      <p>A safe space for your mental wellness journey.</p>
+      <div id="socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+    <div><h4>Product</h4><ul>
+      <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+      <li><a href="{% url 'chat' %}">AI Chat</a></li>
+      <li><a href="{% url 'journal' %}">Journal</a></li>
+    </ul></div>
+    <div><h4>Support</h4><ul>
+      <li><a href="#">Help Center</a></li>
+      <li><a href="#">Crisis Helpline: 988</a></li>
+    </ul></div>
+    <div><h4>Legal</h4><ul>
+      <li><a href="{% url 'privacy' %}">Privacy Policy</a></li>
+      <li><a href="#">Terms of Service</a></li>
+    </ul></div>
+  </div>
+  <div id="footer-bottom">
+    <p>&copy; 2026 MindSpace. All rights reserved.</p>
+    <p>Made with 💙 for mental wellness</p>
+  </div>
+</footer>
+
+<script>
+  const labels = {{ days_labels|safe }};
+  const counts = {{ days_counts|safe }};
+
+  new Chart(document.getElementById('moodChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Mood Check-ins',
+        data: counts,
+        backgroundColor: 'rgba(74,144,226,0.7)',
+        borderColor: '#4a90e2',
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'top' } },
+      scales: {
+        y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, grid: { color: '#f0f4f8' } },
+        x: { grid: { display: false } }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
