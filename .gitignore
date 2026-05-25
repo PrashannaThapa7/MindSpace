@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.pyc
+*.pkl
+db.sqlite3
+.DS_Store
+go.sh
